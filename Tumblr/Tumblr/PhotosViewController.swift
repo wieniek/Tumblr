@@ -67,8 +67,19 @@ class PhotosViewController: UIViewController, UITableViewDataSource, UITableView
     return cell
   }
   
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated:true)
+  }
+  
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    
-    
+    let vc = segue.destination as! PhotoDetailsViewController
+    let indexPath = tableView.indexPath(for: sender as! UITableViewCell)!
+    let post = posts[indexPath.row]
+    if let photos = post.value(forKeyPath: "photos") as? [NSDictionary] {
+      let imageUrlString = photos[0].value(forKeyPath: "original_size.url") as? String
+      if let imageUrl = URL(string: imageUrlString!) {
+        vc.photoURL = imageUrl
+      }
+    }
   }
 }
